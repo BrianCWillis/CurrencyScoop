@@ -1,0 +1,77 @@
+/* Elemtns */
+
+html{
+	background-color: #000;
+	font-family: times-roman;
+	font-size: 20px;
+}
+
+body{
+	background-color: #111;
+	padding: 1rem;
+	margin: auto;
+	width: 75%;
+}
+
+header{
+	background-color: #222;
+	margin: auto;
+	text-align: center;
+	width: 50%;
+	box-shadow: 0px 0px 5px 0px #000;
+}
+
+h1{
+	color: #d7ffd7;
+}
+
+p{
+	color: #d7ffd7;
+	margin: 0px;
+}
+
+footer{
+	background-color: #000;
+	margin: 1rem auto;
+	width: 50%;
+	text-align: center;
+	border: 1px solid #d7ffd7;
+}
+
+footer p{
+	color: #eee;
+	font-size: 0.75rem;
+}
+
+/* Classes */
+
+.currency-chart{
+	font-size: 0.8rem;
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	grid-gap; 0px 0px;
+}
+
+.currency-chart p{
+	border: 1px solid white;
+}
+
+.chart-heading{
+	background-color: #330000;
+	font-weight: bold;
+	padding-left: 0.25rem;
+}
+
+.chart-content{
+	background-color: #003300;
+	padding-left: 0.25rem;
+}
+
+/* IDs */
+
+#chart-container{
+	margin: auto;
+	width: 40%;
+	border: 1px solid white;
+	box-shadow: 0px 0px 8px 0px #000;
+}
