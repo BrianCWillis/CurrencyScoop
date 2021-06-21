@@ -5,59 +5,43 @@ var content = [
 	e('p', {className: 'chart-heading', key: 'country-heading'}, 'Country/Countries Using It')
 ];
 
-//Web service request info and response container.
-var currencies = {};
-const endpoint = 'currencies';
-const key = '20313d0bc44c01c2f60c711102e67deb';
-const type = 'fiat';
-
-//ajax request.
-//Currently, this fails.
-$.ajax({
-	url: 'https://api.currencyscoop.com/v1/' + endpoint + '?api_key=' + key + '&type=' + type,
-	dataType: 'jsonp',
-	success: function(currencies){
-		alert(currencies);
-	}
-});
-
-//Proof-of-concept data (to show that the ReactJS code works).
-currencies = {
-	"quotes":[
-		{"currency": "Dollar", "countries": "USA, Canada, Australia, New Zealand"},
-		{"currency": "Pound", "countries": "United Kingdom"},
-		{"currency": "Euro", "countries": "France, Germany, Italy"},
-		{"currency": "Yen", "countries": "Japan"},
-		{"currency": "Yuan", "countries": "China"},
-		{"currency": "Ruble", "countries": "Russia"},
-	]
-};
-
-//Populate content with table data.
-var currencyID, countryID;
-for(var i=0; i<currencies.quotes.length; i++){
-	currencyID = 'currency'+i.toString();
-	countryID = 'country'+i.toString();
-	content.push(
-		e('p', {className: 'chart-content', key: currencyID}, currencies.quotes[i].currency)
-	);
-	content.push(
-		e('p', {className: 'chart-content', key: countryID}, currencies.quotes[i].countries)
-	);
-}
-
-class CurrencyChart extends React.Component{
-	constructor(props){
-		super(props);
-	}
-	
-	render(){
-		return e(
-			'div', {className: 'currency-chart'}, content
+//Retrieve and format data using XMLHTTPRequest and JSON functionality.
+var CSRequest = new XMLHttpRequest();
+var CSResponse;
+CSRequest.open("GET", "https://api.currencyscoop.com/v1/currencies?api_key=20313d0bc44c01c2f60c711102e67deb&type=fiat");
+CSRequest.send();
+CSRequest.onload = function(){
+	CSResponse = JSON.parse(CSRequest.response);								//Create JSON object.
+	var currencyKeys = Object.keys(CSResponse.response.fiats);					//Keys are defined by currency codes. This array stores those.
+	var i = 0;																	//ID iterator.
+	currencyKeys.forEach(function(key){											//Iterate through currency keys.
+		var currencyName = CSResponse.response.fiats[key].currency_name;		//Get currency name.
+		var countryName = CSResponse.response.fiats[key].countries;				//Get currency countries.
+		var currencyID = "currency" + i.toString();
+		var countryID = "countries" + i.toString();
+		content.push(	//Add currency to React sub-component array.
+			e('p', {className: 'chart-content', key: currencyID}, currencyName)
 		);
-	}
+		content.push(	//Add countries to React sub-component array.
+			e('p', {className: 'chart-content', key: countryID}, countryName)
+		);
+		i++;
+	});
+	
+	//React component.
+	//The logic of constructing the vast majority of the component is handled above, so all that is necessary is to hand the array to the main div.
+	class CurrencyChart extends React.Component{
+		constructor(props){
+			super(props);
+		}
+		
+		render(){
+			return e(
+				'div', {className: 'currency-chart'}, content
+			);
+		}
+	};
+	
+	//Display the chart.
+	ReactDOM.render(e(CurrencyChart), document.querySelector('#chart-container'));
 };
-
-ReactDOM.render(e(CurrencyChart), document.querySelector('#chart-container'));
-
-//API URL w/ Endpoint and Key: https://api.currencyscoop.com/v1/currencies?api_key=20313d0bc44c01c2f60c711102e67deb
